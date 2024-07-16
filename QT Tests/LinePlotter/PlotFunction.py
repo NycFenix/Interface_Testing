@@ -8,10 +8,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QSizePolicy, QStatusBar,
-    QWidget)
+    QWidget, QPushButton)
 
 
 import matplotlib.pyplot as plt
+plt.use("")
 import numpy as np
 
 class Ui_MainWindow(object):
@@ -23,10 +24,12 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayoutWidget = QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setGeometry(QRect(320, 470, 187, 80))
+        self.horizontalLayoutWidget.setGeometry(QRect(220, 470, 187, 80))
         self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+
+        # coefficient fields
 
 
         self.coefA = QLineEdit(self.horizontalLayoutWidget)
@@ -37,20 +40,27 @@ class Ui_MainWindow(object):
         self.coefB.setObjectName(u"Coefficient B")
         self.horizontalLayout.addWidget(self.coefB)
 
+        # Calculate button
+
+        self.PlotButton = QPushButton(self.centralwidget)
+        self.PlotButton.setObjectName("PlotButton")
+        self.PlotButton.setGeometry(QRect(530, 400, 90, 50))
+        self.PlotButton.clicked.connect(lambda: self.UpdatePlot(self.coefA, self.coefB))
 
         # labels
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(40, 30, 751, 361))
+        self.Graphbitmap = QLabel(self.centralwidget)
+        self.Graphbitmap.setObjectName(u"label")
+        self.Graphbitmap.setGeometry(QRect(40, 30, 751, 361))
+        self.Graphbitmap.setPixmap(QPixmap('linear_regression.png'))
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(330, 410, 81, 81))
+        self.label_2.setGeometry(QRect(230, 410, 81, 81))
         self.label_3 = QLabel(self.centralwidget)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(430, 410, 81, 81))
+        self.label_3.setGeometry(QRect(330, 410, 81, 81))
         self.label4 = QLabel(self.centralwidget)
         self.label4.setObjectName("name")
-        self.label4.setGeometry(QRect(370, 370, 200, 81))
+        self.label4.setGeometry(QRect(270, 370, 200, 81))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -67,19 +77,22 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Graph", None))
+        self.Graphbitmap.setText(QCoreApplication.translate("MainWindow", u"Graph", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Coefficient A", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Coeficient B", None))
         self.label4.setText(QCoreApplication.translate("MainWindow", u"Function: y = Ax + B", None))
+        self.PlotButton.setText(QCoreApplication.translate("MainWindow", "PLOT!", None))
     # retranslateUi
 
-    def plotFuntion(coefA, coefB):
+    def UpdatePlot(self, coefA, coefB):
         A, B = float(coefA.text()), float(coefB.text())
         x = np.linspace(-50, 50, 100)
         y = (A * x) + B 
         fig = plt.figure(figsize = (20, 10))
         plt.plot(x, y)
-
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.savefig('linear_regression.png')
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
