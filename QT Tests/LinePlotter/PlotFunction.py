@@ -1,18 +1,14 @@
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtCore import (QCoreApplication,
+    QMetaObject, QObject, QRect)
+from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QSizePolicy, QStatusBar,
     QWidget, QPushButton)
 
 
 import matplotlib.pyplot as plt
-plt.use("")
+
 import numpy as np
 
 class Ui_MainWindow(object):
@@ -51,7 +47,10 @@ class Ui_MainWindow(object):
         self.Graphbitmap = QLabel(self.centralwidget)
         self.Graphbitmap.setObjectName(u"label")
         self.Graphbitmap.setGeometry(QRect(40, 30, 751, 361))
-        self.Graphbitmap.setPixmap(QPixmap('linear_regression.png'))
+        self.Graphimage= QPixmap('QT Tests\LinePlotter\Empty.png')
+        self.Graphbitmap.setPixmap(self.Graphimage)
+        self.Graphbitmap.setScaledContents(True)
+
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setGeometry(QRect(230, 410, 81, 81))
@@ -77,7 +76,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.Graphbitmap.setText(QCoreApplication.translate("MainWindow", u"Graph", None))
+        #self.Graphbitmap.setText(QCoreApplication.translate("MainWindow", u"Graph", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Coefficient A", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Coeficient B", None))
         self.label4.setText(QCoreApplication.translate("MainWindow", u"Function: y = Ax + B", None))
@@ -86,13 +85,19 @@ class Ui_MainWindow(object):
 
     def UpdatePlot(self, coefA, coefB):
         A, B = float(coefA.text()), float(coefB.text())
-        x = np.linspace(-50, 50, 100)
+        x = np.linspace(-0, 50, 100)
         y = (A * x) + B 
-        fig = plt.figure(figsize = (20, 10))
+        fig = plt.figure(figsize = (5, 5))
         plt.plot(x, y)
         plt.xlabel('x')
         plt.ylabel('y')
-        plt.savefig('linear_regression.png')
+        plt.grid()
+        plt.savefig('QT Tests\LinePlotter\Function.png')
+        self.Graphimage.load("QT Tests\LinePlotter\Function.png")
+        
+        self.Graphbitmap.setPixmap(self.Graphimage)
+        self.Graphbitmap.setScaledContents(True)
+        #plt.close()
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
@@ -100,6 +105,7 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(PlotUI)
     PlotUI.show()
+
     sys.exit(app.exec())
 
 
